@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Osmanlıca Latinize Klavye ve Kontrol Paneli</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #003366;
+        }
+        .keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            width: 600px;
+            margin-bottom: 20px;
+            background-color: #e6f0ff;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #003366;
+        }
+        .keyboard button {
+            width: 50px;
+            height: 50px;
+            margin: 2px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #003366;
+            background-color: #ffffff;
+            color: #003366;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .keyboard button:hover {
+            background-color: #003366;
+            color: #ffffff;
+        }
+        textarea {
+            width: 600px;
+            height: 100px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            resize: none;
+            border-radius: 5px;
+            border: 1px solid #003366;
+            background-color: #ffffff;
+            color: #003366;
+        }
+        .control-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e6f0ff;
+            border: 2px solid #003366;
+            border-radius: 5px;
+            width: 640px;
+        }
+        .control-panel button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #003366;
+            color: #ffffff;
+            transition: background-color 0.2s;
+        }
+        .control-panel button:hover {
+            background-color: #001a33;
+        }
+        .comparison-result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #003366;
+        }
+        #data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #data-table th, #data-table td {
+            border: 1px solid #003366;
+            padding: 8px;
+            text-align: left;
+        }
+        #data-table th {
+            background-color: #003366;
+            color: #ffffff;
+        }
+        #data-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        #search-box {
+            width: 400px;
+            height: 40px;
+            margin: 10px 0;
+            font-size: 16px;
+            padding: 5px;
+            border: 1px solid #003366;
+            border-radius: 5px;
+        }
+        .contribution-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e6f0ff;
+            border: 2px solid #003366;
+            border-radius: 5px;
+            width: 640px;
+        }
+        .contribution-panel input[type="text"] {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            padding: 5px;
+            border: 1px solid #003366;
+            border-radius: 5px;
+        }
+        .contribution-panel button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #003366;
+            color: #ffffff;
+            transition: background-color 0.2s;
+        }
+        .contribution-panel button:hover {
+            background-color: #001a33;
+        }
+        .contribution-list {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #003366;
+        }
+        .user-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e6f0ff;
+            border: 2px solid #003366;
+            border-radius: 5px;
+            width: 640px;
+        }
+        .user-panel h2 {
+            margin-top: 0;
+        }
+        .user-panel input[type="text"], .user-panel input[type="password"] {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            padding: 5px;
+            border: 1px solid #003366;
+            border-radius: 5px;
+        }
+        .user-panel button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #003366;
+            color: #ffffff;
+            transition: background-color 0.2s;
+        }
+        .user-panel button:hover {
+            background-color: #001a33;
+        }
+        .user-message {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #003366;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Osmanlıca Latinize Klavye ve Kontrol Paneli</h1>
+
+<div class="keyboard" id="keyboard">
+    <!-- Osmanlıca karakter butonları -->
+</div>
+
+<h2>Osmanlıca Metin</h2>
+<textarea id="input" placeholder="Osmanlıca metni buraya yazın..."></textarea>
+
+<h2>Latinize Edilmiş Metin</h2>
+<textarea id="latinized-output" placeholder="Latinize edilmiş metin burada görünecek..." readonly></textarea>
+
+<h2>Türkçe Çeviri</h2>
+<textarea id="turkish-output" placeholder="Türkçe çeviri burada görünecek..." readonly></textarea>
+
+<div class="control-panel">
+    <button onclick="latinize()">Latinize Et</button>
+    <button onclick="showTurkish()">Türkçe Karşılığını Göster</button>
+    <button onclick="compareTexts()">Karşılaştır</button>
+
+    <div class="comparison-result" id="comparison-result"></div>
+</div>
+
+<!-- Excel Dosyası Yükleme Bölümü -->
+<h2>Excel Dosyası Yükle</h2>
+<input type="file" id="excel-file" accept=".xlsx, .xls">
+<p id="file-name"></p>
+<p id="file-size"></p>
+<input type="text" id="search-box" placeholder="Dosya içinde arama yapın..." oninput="searchInData()">
+<table id="data-table"></table>
+
+<div class="chart-container">
+    <h2>Benzerlik Oranı Grafiği</h2>
+    <canvas id="accuracy-chart" width="600" height="400"></canvas>
+</div>
+
+<div class="chart-container">
+    <h2>Hata Analizi Grafiği</h2>
+    <canvas id="error-analysis-chart" width="600" height="400"></canvas>
+</div>
+
+<!-- Kullanıcı Katkısı Bölümü -->
+<div class="contribution-panel">
+    <h2>Kullanıcı Katkısı</h2>
+    <input type="text" id="user-contribution-input" placeholder="Manuel metin girin...">
+    <button onclick="addUserContribution()">Katkıyı Ekle</button>
+    <div class="contribution-list" id="contribution-list"></div>
+</div>
+
+<!-- Kullanıcı Paneli -->
+<div class="user-panel">
+    <h2>Giriş Yap</h2>
+    <input type="text" id="username" placeholder="Kullanıcı Adı">
+    <input type="password" id="password" placeholder="Şifre">
+    <button onclick="login()">Giriş Yap</button>
+    <button onclick="logout()">Çıkış Yap</button>
+    <div class="user-message" id="user-message"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.0/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Osmanlıca karakterleri ve veri setini tanımlama
+    const osmanlicaKeys = ['ا', 'ب', 'پ', 'ت', 'ث', 'ج', 'چ', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'گ', 'ل', 'م', 'ن', 'ه', 'و', 'ی'];
+    const osmanlicaData = [
+        {"Osmanlica": "بسم الله الرحمن الرحيم", "Latinize": "Bismillah ir-Rahman ir-Rahim", "Turkish": "Rahmân ve Rahîm olan Allah'ın adıyla"},
+        {"Osmanlica": "السلام عليكم", "Latinize": "As-selâmu aleykum", "Turkish": "Selamünaleyküm"},
+        {"Osmanlica": "الحمد لله", "Latinize": "El-hamdu lillah", "Turkish": "Hamdolsun Allah'a"}
+    ];
+
+    // Osmanlıca klavye butonlarını oluşturma
+    const keyboardDiv = document.getElementById('keyboard');
+    osmanlicaKeys.forEach(key => {
+        const button = document.createElement('button');
+        button.textContent = key;
+        button.onclick = () => document.getElementById('input').value += key;
+        keyboardDiv.appendChild(button);
+    });
+
+    function latinize() {
+        // Basit Latinize işlemi: Veriyi sadece örnek olarak alıyoruz
+        const inputText = document.getElementById('input').value;
+        const foundItem = osmanlicaData.find(item => item.Osmanlica === inputText);
+        document.getElementById('latinized-output').value = foundItem ? foundItem.Latinize : 'Bulunamadı';
+    }
+
+    function showTurkish() {
+        // Basit Türkçe çeviri işlemi: Veriyi sadece örnek olarak alıyoruz
+        const latinizedText = document.getElementById('latinized-output').value;
+        const foundItem = osmanlicaData.find(item => item.Latinize === latinizedText);
+        document.getElementById('turkish-output').value = foundItem ? foundItem.Turkish : 'Bulunamadı';
+    }
+
+    function compareTexts() {
+        const osmanlicaText = document.getElementById('input').value;
+        const latinizedText = document.getElementById('latinized-output').value;
+        const foundItem = osmanlicaData.find(item => item.Osmanlica === osmanlicaText && item.Latinize === latinizedText);
+        document.getElementById('comparison-result').textContent = foundItem ? 'Metin eşleşiyor!' : 'Metin eşleşmiyor!';
+    }
+
+    document.getElementById('excel-file').addEventListener('change', handleFile, false);
+
+    function handleFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        document.getElementById('file-name').textContent = Dosya Adı: ${file.name};
+        document.getElementById('file-size').textContent = Dosya Boyutu: ${Math.round(file.size / 1024)} KB;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(sheet);
+            populateTable(json);
+            generateCharts(json);
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function populateTable(data) {
+        const table = document.getElementById('data-table');
+        table.innerHTML = '';
+        const headers = Object.keys(data[0]);
+        let thead = '<thead><tr>';
+        headers.forEach(header => thead += <th>${header}</th>);
+        thead += '</tr></thead>';
+        table.innerHTML += thead;
+
+        let tbody = '<tbody>';
+        data.forEach(row => {
+            tbody += '<tr>';
+            headers.forEach(header => tbody += <td>${row[header]}</td>);
+            tbody += '</tr>';
+        });
+        tbody += '</tbody>';
+        table.innerHTML += tbody;
+    }
+
+    function generateCharts(data) {
+        const labels = data.map((_, index) => index + 1);
+        const accuracyData = data.map(row => row.Accuracy || 0);
+        const errorData = data.map(row => row.Error || 0);
+
+        const ctx1 = document.getElementById('accuracy-chart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Benzerlik Oranı',
+                    data: accuracyData,
+                    borderColor: '#003366',
+                    backgroundColor: 'rgba(0, 51, 102, 0.2)',
+                    fill: true
+                }]
+            }
+        });
+
+        const ctx2 = document.getElementById('error-analysis-chart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Hata Analizi',
+                    data: errorData,
+                    backgroundColor: '#003366'
+                }]
+            }
+        });
+    }
+
+    function searchInData() {
+        const query = document.getElementById('search-box').value.toLowerCase();
+        const rows = document.querySelectorAll('#data-table tbody tr');
+        rows.forEach(row => {
+            const cells = row.getElementsByTagName('td');
+            let found = false;
+            for (let i = 0; i < cells.length; i++) {
+                if (cells[i].textContent.toLowerCase().includes(query)) {
+                    found = true;
+                    break;
+                }
+            }
+            row.style.display = found ? '' : 'none';
+        });
+    }
+
+    function addUserContribution() {
+        const contributionInput = document.getElementById('user-contribution-input');
+        const contributionList = document.getElementById('contribution-list');
+        if (contributionInput.value.trim()) {
+            const newContribution = document.createElement('div');
+            newContribution.textContent = contributionInput.value;
+            contributionList.appendChild(newContribution);
+            contributionInput.value = '';
+        }
+    }
+
+    function login() {
+        // Basit bir giriş işlevi
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        if (username === 'admin' && password === 'password') {
+            document.getElementById('user-message').textContent = 'Giriş başarılı!';
+        } else {
+            document.getElementById('user-message').textContent = 'Giriş başarısız!';
+        }
+    }
+
+    function logout() {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('user-message').textContent = 'Çıkış yapıldı.';
+    }
+</script>
+
+</body>
+</html>
