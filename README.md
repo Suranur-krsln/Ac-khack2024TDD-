@@ -1,1 +1,1 @@
-Veri setimizde bulunan 60.916 adet kelime, harf, cümle ve atasözleri deyimler örnekleri ile doğal dil işleme modelimiz bulunmaktadır. Sunumda kodumuzun ara yüz tasarımının videolu anlatımı bulunmaktadır. 
+Veri setimizde bulunan 60.916 adet Osmanlıca kelime, harf, cümle ve atasözleri deyimler örnekleri ile doğal dil işleme modelimiz bulunmaktadır. Sunumda kodumuzun ara yüz tasarımının videolu anlatımı bulunmaktadır. 
